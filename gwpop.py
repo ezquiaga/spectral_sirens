@@ -48,3 +48,19 @@ def rate_z(z,zp,alpha,beta):
     num = (1.+z)**alpha
     den = 1. + ((1.+z)/(1.+zp))**(alpha+beta)
     return c0 * num / den
+
+""" Toy models """
+
+def two_box(x,edge_1,width_1,edge_2,width_2,filter):
+    def box_smooth(x,edge,width,filter):
+        low_edge = edge
+        high_edge = edge + width
+
+        low_filter = np.exp(-(x-low_edge)**2/(2.*filter**2))
+        low_filter = np.where(x<low_edge,low_filter,1.)
+        high_filter = np.exp(-(x-high_edge)**2/(2.*filter**2))
+        high_filter = np.where(x>high_edge,high_filter,1.)
+
+        return low_filter*high_filter*1./width
+    
+    return box_smooth(x,edge_1,width_1,filter) + box_smooth(x,edge_2,width_2,filter)
