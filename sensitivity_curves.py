@@ -4,28 +4,6 @@ from scipy.interpolate import interp1d
 
 """ Ground based detectors """
 
-#READING DATA
-#dataKAGRA = np.genfromtxt('data_sensitivity_curves/fig1_kagra_sensitivity.txt')
-#fKAGRA=dataKAGRA[:,0]
-#hKAGRA=dataKAGRA[:,5]
-
-#dataVIRGO = np.genfromtxt('data_sensitivity_curves/fig1_adv_sensitivity.txt')
-#fVIRGO=dataVIRGO[:,0]
-#hVIRGO=dataVIRGO[:,6]
-
-dataLIGO = np.genfromtxt('data_sensitivity_curves/aligo.txt')
-fLIGO=dataLIGO[:,0]
-hLIGO=dataLIGO[:,1]
-sn_intALIGO = interp1d(fLIGO,hLIGO**2.,bounds_error=False,fill_value=1.0)
-minfALIGO = min(fLIGO)
-maxfALIGO = max(fLIGO)
-def aLIGO():
-    return sn_intALIGO, minfALIGO, maxfALIGO
-
-#dataLIGO_design = np.genfromtxt('data_sensitivity_curves/aligo_design.txt')
-#fLIGO_design=dataLIGO_design[:,0]
-#hLIGO_design=dataLIGO_design[:,1]
-
 dataAplus = np.genfromtxt('data_sensitivity_curves/aplus.txt')
 fAplus=dataAplus[:,0]
 hAplus=dataAplus[:,1]
@@ -53,8 +31,7 @@ maxfO2 = max(fO2)
 def O2():
     return sn_intO2, minfO2, maxfO2
 
-dataO3 = np.genfromtxt('data_sensitivity_curves/ligo_living_reviews/aligo_O3actual_L1.txt')
-#dataO3 = np.genfromtxt('data_sensitivity_curves/o3_h1.txt')
+dataO3 = np.genfromtxt('data_sensitivity_curves/aligo_O3actual_L1.txt')
 fO3=dataO3[:,0]
 hO3=dataO3[:,1]
 sn_intO3 = interp1d(fO3,hO3**2.,bounds_error=False,fill_value=1.0)
@@ -63,7 +40,7 @@ maxfO3 = max(fO3)
 def O3():
     return sn_intO3, minfO3, maxfO3
 
-dataO4 = np.genfromtxt('data_sensitivity_curves/ligo_living_reviews/aligo_O4high.txt')
+dataO4 = np.genfromtxt('data_sensitivity_curves/aligo_O4high.txt')
 fO4=dataO4[:,0]
 hO4=dataO4[:,1]
 sn_intO4 = interp1d(fO4,hO4**2.,bounds_error=False,fill_value=1.0)
@@ -72,7 +49,7 @@ maxfO4 = max(fO4)
 def O4():
     return sn_intO4, minfO4, maxfO4
 
-dataO5 = np.genfromtxt('data_sensitivity_curves/ligo_living_reviews/AplusDesign.txt')
+dataO5 = np.genfromtxt('data_sensitivity_curves/AplusDesign.txt')
 fO5=dataO5[:,0]
 hO5=dataO5[:,1]
 sn_intO5 = interp1d(fO5,hO5**2.,bounds_error=False,fill_value=1.0)
@@ -81,14 +58,6 @@ maxfO5 = max(fO5)
 def O5():
     return sn_intO5, minfO5, maxfO5
 
-dataLIGOeh = np.genfromtxt('data_sensitivity_curves/fig1_aligo_sensitivity.txt')
-fLIGOeh=dataLIGOeh[:,0]
-hLIGOeh=dataLIGOeh[:,2]
-sn_intLIGOeh = interp1d(fLIGOeh,hLIGOeh**2.,bounds_error=False,fill_value=1.0)
-minfLIGOeh = min(fLIGOeh)
-maxfLIGOeh = max(fLIGOeh)
-def LIGOeh():
-    return sn_intLIGOeh, minfLIGOeh, maxfLIGOeh
 
 datavoyager = np.genfromtxt('data_sensitivity_curves/voyager.txt')
 fvoyager=datavoyager[:,0]
@@ -119,8 +88,7 @@ def CE():
 
 """ Virgo """
 
-dataVO3 = np.genfromtxt('data_sensitivity_curves/ligo_living_reviews/avirgo_O3actual.txt')
-#dataO3 = np.genfromtxt('data_sensitivity_curves/o3_h1.txt')
+dataVO3 = np.genfromtxt('data_sensitivity_curves/avirgo_O3actual.txt')
 fVO3=dataVO3[:,0]
 hVO3=dataVO3[:,1]
 sn_intVO3 = interp1d(fVO3,hVO3**2.,bounds_error=False,fill_value=1.0)
@@ -129,7 +97,7 @@ maxfVO3 = max(fVO3)
 def VO3():
     return sn_intVO3, minfVO3, maxfVO3
 
-dataVO4 = np.genfromtxt('data_sensitivity_curves/ligo_living_reviews/avirgo_O4high_NEW.txt')
+dataVO4 = np.genfromtxt('data_sensitivity_curves/avirgo_O4high_NEW.txt')
 fVO4=dataVO4[:,0]
 hVO4=dataVO4[:,1]
 sn_intVO4 = interp1d(fVO4,hVO4**2.,bounds_error=False,fill_value=1.)
@@ -138,7 +106,7 @@ maxfVO4 = max(fVO4)
 def VO4():
     return sn_intVO4, minfVO4, maxfVO4
 
-dataVO5 = np.genfromtxt('data_sensitivity_curves/ligo_living_reviews/avirgo_O5high_NEW.txt')
+dataVO5 = np.genfromtxt('data_sensitivity_curves/avirgo_O5high_NEW.txt')
 fVO5=dataVO5[:,0]
 hVO5=dataVO5[:,1]
 sn_intVO5 = interp1d(fVO5,hVO5**2.,bounds_error=False,fill_value=1.)
