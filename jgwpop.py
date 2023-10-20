@@ -83,16 +83,32 @@ def rate_z(z,zp,alpha,beta):
 
 """ Toy models """
 
-def two_box(x,edge_1,width_1,edge_2,width_2,filter):
-    def box_smooth(x,edge,width,filter):
-        low_edge = edge
-        high_edge = edge + width
+def box_smooth(x,edge,width,filt):
+    low_edge = edge
+    high_edge = edge + width
 
-        low_filter = jnp.exp(-(x-low_edge)**2/(2.*filter**2))
-        low_filter = jnp.where(x<low_edge,low_filter,1.)
-        high_filter = jnp.exp(-(x-high_edge)**2/(2.*filter**2))
-        high_filter = jnp.where(x>high_edge,high_filter,1.)
+    low_filter = jnp.exp(-(x-low_edge)**2/(2.*filt**2))
+    low_filter = jnp.where(x<low_edge,low_filter,1.)
+    high_filter = jnp.exp(-(x-high_edge)**2/(2.*filt**2))
+    high_filter = jnp.where(x>high_edge,high_filter,1.)
 
-        return low_filter*high_filter*1./width
+    return low_filter*high_filter*1./width
+
+def two_box(x,edge_1,width_1,edge_2,width_2,filt,switch):
     
-    return box_smooth(x,edge_1,width_1,filter) + box_smooth(x,edge_2,width_2,filter)
+    return jnp.where(x < switch,box_smooth(x,edge_1,width_1,filt),box_smooth(x,edge_2,width_2,filt))
+
+def logbox_smooth(x,edge,width,filt):
+    low_edge = edge
+    high_edge = edge + width
+
+    loglow_filter = -(x-low_edge)**2/(2.*filt**2)
+    loglow_filter = jnp.where(x<low_edge,loglow_filter,0.)
+    loghigh_filter = -(x-high_edge)**2/(2.*filt**2)
+    loghigh_filter = jnp.where(x>high_edge,loghigh_filter,0.)
+
+    return loglow_filter + loghigh_filter - jnp.log(width)
+
+def logtwo_box(x,edge_1,width_1,edge_2,width_2,filt,switch):
+    
+    return jnp.where(x < switch,logbox_smooth(x,edge_1,width_1,filt),logbox_smooth(x,edge_2,width_2,filt))

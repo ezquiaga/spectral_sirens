@@ -51,16 +51,17 @@ def rate_z(z,zp,alpha,beta):
 
 """ Toy models """
 
-def two_box(x,edge_1,width_1,edge_2,width_2,filter):
-    def box_smooth(x,edge,width,filter):
-        low_edge = edge
-        high_edge = edge + width
+def box_smooth(x,edge,width,filt):
+    low_edge = edge
+    high_edge = edge + width
 
-        low_filter = np.exp(-(x-low_edge)**2/(2.*filter**2))
-        low_filter = np.where(x<low_edge,low_filter,1.)
-        high_filter = np.exp(-(x-high_edge)**2/(2.*filter**2))
-        high_filter = np.where(x>high_edge,high_filter,1.)
+    low_filter = np.exp(-(x-low_edge)**2/(2.*filt**2))
+    low_filter = np.where(x<low_edge,low_filter,1.)
+    high_filter = np.exp(-(x-high_edge)**2/(2.*filt**2))
+    high_filter = np.where(x>high_edge,high_filter,1.)
 
-        return low_filter*high_filter*1./width
+    return low_filter*high_filter*1./width
+
+def two_box(x,edge_1,width_1,edge_2,width_2,filt,switch):
     
-    return box_smooth(x,edge_1,width_1,filter) + box_smooth(x,edge_2,width_2,filter)
+    return np.where(x < switch,box_smooth(x,edge_1,width_1,filt),box_smooth(x,edge_2,width_2,filt))
