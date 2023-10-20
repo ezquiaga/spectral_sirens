@@ -168,16 +168,14 @@ pw_hlvji=interp1d(w_hlvji, pw_hlvji,bounds_error=False,fill_value=(1.0,0.0))
 """Approximate errors in posteriors"""
 def error_pe_detector(detector):
     sigma_Mc, sigma_eta, sigma_w = [3.0e-2,5.0e-3,5.0e-2]
-    if any(detector == x for x in np.array([sc.O1,sc.O2,sc.O3,sc.LIGOeh])):
+    if any(detector == x for x in np.array([sc.O1,sc.O2,sc.O3])):
         sigma_Mc, sigma_eta, sigma_w = [8.0e-2,2.2e-2,2.1e-1]
-    elif any(detector == x for x in np.array([sc.O4,sc.aLIGO])):
+    elif any(detector == x for x in np.array([sc.O4])):
         sigma_Mc, sigma_eta, sigma_w = [8.0e-2,1.0e-2,8.0e-2]
     elif any(detector == x for x in np.array([sc.O5,sc.Aplus])):
         sigma_Mc, sigma_eta, sigma_w = [3.0e-2,5.0e-3,5.0e-2]
     elif detector == sc.voyager:
         sigma_Mc, sigma_eta, sigma_w = [1.0e-2,2.0e-3,5.0e-2]
-    elif detector == sc.LISA:
-        sigma_Mc, sigma_eta, sigma_w = [3.0e-2,5.0e-3,5.0e-2]
     elif detector == sc.ET:
         sigma_Mc, sigma_eta, sigma_w = [5.0e-3,7.0e-4,2.0e-2]
     elif detector == sc.CE:
