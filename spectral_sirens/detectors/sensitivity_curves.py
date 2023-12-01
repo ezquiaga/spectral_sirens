@@ -1,116 +1,94 @@
 import numpy as np
 from scipy.interpolate import interp1d
 
+import os
+sensitivity_curves_path=os.path.join(os.path.dirname(os.path.abspath(__file__)),'sensitivity_curves')
+pw_path=os.path.join(os.path.dirname(os.path.abspath(__file__)),'pw_network')
 
-""" Ground based detectors """
+def detector_psd(detector_name):
+    file_detector, asd = get_filename(detector_name)
+    file_detector = os.path.join(sensitivity_curves_path,file_detector)
+    data = np.genfromtxt(file_detector)
+    f = data[:,0]
+    h = data[:,1]
+    sn_int = interp1d(f,h**(1. + asd),bounds_error=False,fill_value=1.0)
+    minf = min(f)
+    maxf = max(f)
+    return sn_int, minf, maxf
+    
+"""
+Files for sensitivity curves
+"""
 
-dataAplus = np.genfromtxt('data_sensitivity_curves/aplus.txt')
-fAplus=dataAplus[:,0]
-hAplus=dataAplus[:,1]
-sn_intAplus = interp1d(fAplus,hAplus**2.,bounds_error=False,fill_value=1.0)
-minfAplus = min(fAplus)
-maxfAplus = max(fAplus)
-def Aplus():
-    return sn_intAplus, minfAplus, maxfAplus
+detectors_list = ['CE-40', 'CE-20', 'ET-10-XYL', 'A#', 'A+', 'V+', 'K+', 'Voyager', 'ET']
 
-dataO1 = np.genfromtxt('data_sensitivity_curves/o1.txt')
-fO1=dataO1[:,0]
-hO1=dataO1[:,1]
-sn_intO1 = interp1d(fO1,hO1**2.,bounds_error=False,fill_value=1.0)
-minfO1 = min(fO1)
-maxfO1 = max(fO1)
-def O1():
-    return sn_intO1, minfO1, maxfO1
+def get_filename(tec):
+    if   tec == 'CE-40':
+        filename = 'cosmic_explorer_40km.txt'
+        asd = 1
+    elif tec == 'CE-20':
+        filename = 'cosmic_explorer_20km.txt'
+        asd = 1
+    # https://apps.et-gw.eu/tds/?content=3&r=18213 --> 1st (frequencies) and 4th (xylophone PSD) columns of ET10kmcolumns.txt
+    elif tec == 'ET-10-XYL':
+        filename = 'et_10km_xylophone.txt'
+        asd = 0
+    # https://dcc.ligo.org/LIGO-T2300041-v1/public
+    elif tec == 'A#':
+        filename = 'a_sharp.txt'
+        asd = 1
+    # curves used in the trade study for the Cosmic Explorer Horizon Study, see https://dcc.cosmicexplorer.org/CE-T2000007/public
+    elif tec == 'A+':
+        filename = 'a_plus.txt'
+        asd = 1
+    elif tec == 'V+':
+        filename = 'advirgo_plus.txt'
+        asd = 1
+    elif tec == 'K+':
+        filename = 'kagra_plus.txt'
+        asd = 1
+    elif tec == 'Voyager':
+        filename = 'voyager.txt'
+        asd = 1
+    elif tec == 'ET':
+        filename = 'et_d.txt'
+        asd = 1
+    else: raise ValueError(f'Specified detector sensitivity "{tec}" not found in {detectors_list}.')
 
-dataO2 = np.genfromtxt('data_sensitivity_curves/o2.txt')
-fO2=dataO2[:,0]
-hO2=dataO2[:,1]
-sn_intO2 = interp1d(fO2,hO2**2.,bounds_error=False,fill_value=1.0)
-minfO2 = min(fO2)
-maxfO2 = max(fO2)
-def O2():
-    return sn_intO2, minfO2, maxfO2
-
-dataO3 = np.genfromtxt('data_sensitivity_curves/aligo_O3actual_L1.txt')
-fO3=dataO3[:,0]
-hO3=dataO3[:,1]
-sn_intO3 = interp1d(fO3,hO3**2.,bounds_error=False,fill_value=1.0)
-minfO3 = min(fO3)
-maxfO3 = max(fO3)
-def O3():
-    return sn_intO3, minfO3, maxfO3
-
-dataO4 = np.genfromtxt('data_sensitivity_curves/aligo_O4high.txt')
-fO4=dataO4[:,0]
-hO4=dataO4[:,1]
-sn_intO4 = interp1d(fO4,hO4**2.,bounds_error=False,fill_value=1.0)
-minfO4 = min(fO4)
-maxfO4 = max(fO4)
-def O4():
-    return sn_intO4, minfO4, maxfO4
-
-dataO5 = np.genfromtxt('data_sensitivity_curves/AplusDesign.txt')
-fO5=dataO5[:,0]
-hO5=dataO5[:,1]
-sn_intO5 = interp1d(fO5,hO5**2.,bounds_error=False,fill_value=1.0)
-minfO5 = min(fO5)
-maxfO5 = max(fO5)
-def O5():
-    return sn_intO5, minfO5, maxfO5
+    return filename, asd
 
 
-datavoyager = np.genfromtxt('data_sensitivity_curves/voyager.txt')
-fvoyager=datavoyager[:,0]
-hvoyager=datavoyager[:,1]
-sn_intvoyager = interp1d(fvoyager,hvoyager**2.,bounds_error=False,fill_value=1.0)
-minfvoyager = min(fvoyager)
-maxfvoyager = max(fvoyager)
-def voyager():
-    return sn_intvoyager, minfvoyager, maxfvoyager
+def detector_name(detector):
+    if detector == 'CE-40':
+        name = 'Cosmic Explorer 40km'
+    elif detector == 'CE-20':
+        name = 'Cosmic Explorer 20km'
+    elif detector == 'ET-10-XYL':
+        name = 'Einstein Telescope 10km Xylophone'
+    elif detector == 'A#':
+        name = 'Advanced LIGO Sharp'
+    elif detector == 'A+':
+        name = 'Advanced LIGO Plus'
+    elif detector == 'V+':
+        name = 'Advanced Virgo Plus'
+    elif detector == 'K+':
+        name = 'KAGRA Plus'
+    elif detector == 'Voyager':
+        name = 'Voyager'
+    elif detector == 'ET':
+        name = 'Einstein Telescope'
+    else: raise ValueError(f'Specified detector sensitivity "{detector}" not found in {detectors_list}.')
+    return name
 
-dataET = np.genfromtxt('data_sensitivity_curves/et_d.txt')
-fET=dataET[:,0]
-hET=dataET[:,1]
-sn_intET = interp1d(fET,hET**2.,bounds_error=False,fill_value=1.0)
-minfET = min(fET)
-maxfET = max(fET)
-def ET():
-    return sn_intET, minfET, maxfET
+"""Antenna patter sensitivity detector for different networks"""
+w_data, pw_data = np.genfromtxt(os.path.join(pw_path,'pw_single.txt'),unpack=True)
+pw=interp1d(w_data, pw_data,bounds_error=False,fill_value=(1.0,0.0))
 
-dataCE = np.genfromtxt('data_sensitivity_curves/ce.txt')
-fCE=dataCE[:,0]
-hCE=dataCE[:,1]
-sn_intCE = interp1d(fCE,hCE**2.,bounds_error=False,fill_value=1.0)
-minfCE = min(fCE)
-maxfCE = max(fCE)
-def CE():
-    return sn_intCE, minfCE, maxfCE
-
-""" Virgo """
-
-dataVO3 = np.genfromtxt('data_sensitivity_curves/avirgo_O3actual.txt')
-fVO3=dataVO3[:,0]
-hVO3=dataVO3[:,1]
-sn_intVO3 = interp1d(fVO3,hVO3**2.,bounds_error=False,fill_value=1.0)
-minfVO3 = min(fVO3)
-maxfVO3 = max(fVO3)
-def VO3():
-    return sn_intVO3, minfVO3, maxfVO3
-
-dataVO4 = np.genfromtxt('data_sensitivity_curves/avirgo_O4high_NEW.txt')
-fVO4=dataVO4[:,0]
-hVO4=dataVO4[:,1]
-sn_intVO4 = interp1d(fVO4,hVO4**2.,bounds_error=False,fill_value=1.)
-minfVO4 = min(fVO4)
-maxfVO4 = max(fVO4)
-def VO4():
-    return sn_intVO4, minfVO4, maxfVO4
-
-dataVO5 = np.genfromtxt('data_sensitivity_curves/avirgo_O5high_NEW.txt')
-fVO5=dataVO5[:,0]
-hVO5=dataVO5[:,1]
-sn_intVO5 = interp1d(fVO5,hVO5**2.,bounds_error=False,fill_value=1.)
-minfVO5 = min(fVO5)
-maxfVO5 = max(fVO5)
-def VO5():
-    return sn_intVO5, minfVO5, maxfVO5
+w_single, pw_single = np.genfromtxt(os.path.join(pw_path,'pw_single.txt'),unpack=True)
+pw_single=interp1d(w_single, pw_single,bounds_error=False,fill_value=(1.0,0.0))
+w_hl, pw_hl = np.genfromtxt(os.path.join(pw_path,'pw_hl.txt'),unpack=True)
+pw_hl=interp1d(w_hl, pw_hl,bounds_error=False,fill_value=(1.0,0.0))
+w_hlv, pw_hlv = np.genfromtxt(os.path.join(pw_path,'pw_hlv.txt'),unpack=True)
+pw_hlv=interp1d(w_hlv, pw_hlv,bounds_error=False,fill_value=(1.0,0.0))
+w_hlvji, pw_hlvji = np.genfromtxt(os.path.join(pw_path,'pw_hlvji.txt'),unpack=True)
+pw_hlvji=interp1d(w_hlvji, pw_hlvji,bounds_error=False,fill_value=(1.0,0.0))

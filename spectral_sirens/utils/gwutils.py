@@ -1,8 +1,8 @@
 import numpy as np
 from scipy.interpolate import interp1d
 import scipy.stats as stats
-import sensitivity_curves as sc
-from constants import *
+from .constants import *
+from ..detectors.sensitivity_curves import detector_psd
 
 """Frequency of the GW"""
 def dtdf(fi,M): 
@@ -115,7 +115,7 @@ def snr(mass1,mass2,DL,fmin,Tobs,detector,*args):
     #Tobs in *detector* frame
     # d=luminosity distance in Mpc
     Mc = mchirp(mass1,mass2)
-    detectorSn, fmin_detect, fmax_detect = detector()
+    detectorSn, fmin_detect, fmax_detect = detector_psd(detector)
     fmax = vf_fin(fmin,mass1,mass2,Tobs,*args)
     fmin = max(fmin,fmin_detect)
     fmax = min(fmax,fmax_detect)
@@ -152,33 +152,18 @@ def observed_snr(snr):
     return stats.truncnorm.rvs((lower_snr - mu_snr) / sigma_snr, (upper_snr - mu_snr) / sigma_snr, loc=mu_snr, scale=sigma_snr,size=1)
 observed_snr = np.vectorize(observed_snr)
 
-"""Antenna patter sensitivity detector for different networks"""
-w_data, pw_data = np.genfromtxt('pw_detectors_data/pw_single.txt',unpack=True)
-pw=interp1d(w_data, pw_data,bounds_error=False,fill_value=(1.0,0.0))
-
-w_single, pw_single = np.genfromtxt('pw_detectors_data/pw_single.txt',unpack=True)
-pw_single=interp1d(w_single, pw_single,bounds_error=False,fill_value=(1.0,0.0))
-w_hl, pw_hl = np.genfromtxt('pw_detectors_data/pw_hl.txt',unpack=True)
-pw_hl=interp1d(w_hl, pw_hl,bounds_error=False,fill_value=(1.0,0.0))
-w_hlv, pw_hlv = np.genfromtxt('pw_detectors_data/pw_hlv.txt',unpack=True)
-pw_hlv=interp1d(w_hlv, pw_hlv,bounds_error=False,fill_value=(1.0,0.0))
-w_hlvji, pw_hlvji = np.genfromtxt('pw_detectors_data/pw_hlvji.txt',unpack=True)
-pw_hlvji=interp1d(w_hlvji, pw_hlvji,bounds_error=False,fill_value=(1.0,0.0))
-
 """Approximate errors in posteriors"""
 def error_pe_detector(detector):
     sigma_Mc, sigma_eta, sigma_w = [3.0e-2,5.0e-3,5.0e-2]
-    if any(detector == x for x in np.array([sc.O1,sc.O2,sc.O3])):
+    if any(detector == x for x in np.array(['O1','O2','O3'])):
         sigma_Mc, sigma_eta, sigma_w = [8.0e-2,2.2e-2,2.1e-1]
-    elif any(detector == x for x in np.array([sc.O4])):
+    elif any(detector == x for x in np.array(['O4'    ])):
         sigma_Mc, sigma_eta, sigma_w = [8.0e-2,1.0e-2,8.0e-2]
-    elif any(detector == x for x in np.array([sc.O5,sc.Aplus])):
+    elif any(detector == x for x in np.array(['O5','A+'])):
         sigma_Mc, sigma_eta, sigma_w = [3.0e-2,5.0e-3,5.0e-2]
-    elif detector == sc.voyager:
+    elif any(detector == x for x in np.array(['Voyager','A#'])):
         sigma_Mc, sigma_eta, sigma_w = [1.0e-2,2.0e-3,5.0e-2]
-    elif detector == sc.ET:
-        sigma_Mc, sigma_eta, sigma_w = [5.0e-3,7.0e-4,2.0e-2]
-    elif detector == sc.CE:
+    elif any(detector == x for x in np.array(['ET','ET-10-XYL','CE-20','CE-40'])):
         sigma_Mc, sigma_eta, sigma_w = [5.0e-3,7.0e-4,2.0e-2]
     return sigma_Mc,sigma_eta,sigma_w
 

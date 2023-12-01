@@ -38,11 +38,9 @@ Thumbs.db
 
 # Editor files #
 ################
-pw_detectors_data/
 plots_spectral_sirens/
 data_mock_catalogues/
 data_injections/
-gw_horizon_data/
 __pycache__/
 
 # Output files #
@@ -53,3 +51,7 @@ slurm_output/
 # Other folder #
 ################
 H-of-z-and-residuals/
+
+# Ignore files #
+################
+spectral_sirens.egg-info/
