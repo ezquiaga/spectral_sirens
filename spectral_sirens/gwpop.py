@@ -65,3 +65,25 @@ def box_smooth(x,edge,width,filt):
 def two_box(x,edge_1,width_1,edge_2,width_2,filt,switch):
     
     return np.where(x < switch,box_smooth(x,edge_1,width_1,filt),box_smooth(x,edge_2,width_2,filt))
+
+def sigmoid(x,edge,width):
+    return 1./(1.+np.exp(-(x-edge)/width))
+
+def box_sig(x,edge,width,filt):
+    low_edge = edge
+    high_edge = edge + width
+    mid_point = edge + width/2.
+
+    low_filter = sigmoid(x,low_edge-2*filt,filt)
+    low_filter = np.where(x<mid_point,low_filter,1.)
+    high_filter = sigmoid(-x,-high_edge-2*filt,filt)
+    high_filter = np.where(x>mid_point,high_filter,1.)
+
+    return low_filter*high_filter*1./width
+
+def two_box_sig(x,edge_1,width_1,edge_2,width_2,filt,switch):
+    
+    return np.where(x < switch,box_sig(x,edge_1,width_1,filt),box_sig(x,edge_2,width_2,filt))
+
+def gaussian(x,mu,sig):
+    return np.exp(-(x-mu)**2/(2.*sig**2))/np.sqrt(2.*np.pi*sig**2)

@@ -1,0 +1,55 @@
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor files #
+################
+pw_detectors_data/
+plots_spectral_sirens/
+data_mock_catalogues/
+data_injections/
+gw_horizon_data/
+__pycache__/
+
+# Output files #
+################
+*.out
+slurm_output/
+
+# Other folder #
+################
+H-of-z-and-residuals/

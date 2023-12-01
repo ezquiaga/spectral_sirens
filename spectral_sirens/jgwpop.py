@@ -1,4 +1,5 @@
 import numpyro
+import jax
 import jax.numpy as jnp
 from constants import *
 
@@ -112,3 +113,72 @@ def logbox_smooth(x,edge,width,filt):
 def logtwo_box(x,edge_1,width_1,edge_2,width_2,filt,switch):
     
     return jnp.where(x < switch,logbox_smooth(x,edge_1,width_1,filt),logbox_smooth(x,edge_2,width_2,filt))
+
+def sigmoid(x,edge,width):
+    #1./(1.+jnp.exp(-(x-edge)/width))
+    exponent = (x-edge)/width
+    return jax.nn.sigmoid(exponent)
+
+def box_sig(x,edge,width,filt):
+    low_edge = edge
+    high_edge = edge + width
+    mid_point = edge + width/2.
+
+    low_filter = sigmoid(x,low_edge-2*filt,filt)
+    low_filter = jnp.where(x<mid_point,low_filter,1.)
+    high_filter = sigmoid(-x,-high_edge-2*filt,filt)
+    high_filter = jnp.where(x>mid_point,high_filter,1.)
+
+    return low_filter*high_filter*1./width
+
+def two_box_sig(x,edge_1,width_1,edge_2,width_2,filt,switch):
+    
+    return jnp.where(x < switch,box_sig(x,edge_1,width_1,filt),box_sig(x,edge_2,width_2,filt))
+
+def logsigmoid(x,edge,width):
+    exponent = (x-edge)/width
+    return jax.nn.log_sigmoid(exponent)
+
+def logbox_sig(x,edge,width,filt):
+    low_edge = edge
+    high_edge = edge + width
+    mid_point = edge + width/2.
+
+    #loglow_filter = logsigmoid(x,low_edge-2*filt,filt)
+    loglow_filter = jnp.where(x<mid_point,logsigmoid(x,low_edge-2*filt,filt),0.)
+    #loghigh_filter = logsigmoid(-x,-high_edge-2*filt,filt)
+    loghigh_filter = jnp.where(x>mid_point,logsigmoid(-x,-high_edge-2*filt,filt),0.)
+
+    return loglow_filter + loghigh_filter - jnp.log(width)
+
+def logtwo_box_sig(x,edge_1,width_1,edge_2,width_2,filt,switch):
+    
+    return jnp.where(x < switch,logbox_sig(x,edge_1,width_1,filt),logbox_sig(x,edge_2,width_2,filt))
+
+def gaussian(x,mu,sig):
+    return jnp.exp(-(x-mu)**2/(2.*sig**2))/jnp.sqrt(2.*jnp.pi*sig**2)
+
+def loggaussian(x,mu,sig):
+    return -(x-mu)**2/(2.*sig**2) - jnp.log(jnp.sqrt(2.*jnp.pi*sig**2))
+
+def uniform_sigmoid(x,high_edge,width,filt):
+    low_edge = high_edge - width
+    mid_point = high_edge - width/2.
+
+    low_filter = sigmoid(x,low_edge-2*filt,filt)
+    low_filter = jnp.where(x<mid_point,low_filter,1.)
+    high_filter = sigmoid(-x,-high_edge-2*filt,filt)
+    high_filter = jnp.where(x>mid_point,high_filter,1.)
+
+    return low_filter*high_filter*1./width
+
+def loguniform_sigmoid(x,high_edge,width,filt):
+    low_edge = high_edge - width
+    mid_point = high_edge - width/2.
+
+    #loglow_filter = logsigmoid(x,low_edge-2*filt,filt)
+    loglow_filter = jnp.where(x<mid_point,logsigmoid(x,low_edge-2*filt,filt),0.)
+    #loghigh_filter = logsigmoid(-x,-high_edge-2*filt,filt)
+    loghigh_filter = jnp.where(x>mid_point,logsigmoid(-x,-high_edge-2*filt,filt),0.)
+
+    return loglow_filter + loghigh_filter - jnp.log(width)
