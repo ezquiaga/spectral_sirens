@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.interpolate import interp1d
-from constants import *
+from ..utils.constants import *
 
 """Cosmo quantities"""
 def Ez_inv(z,H0,Om0):

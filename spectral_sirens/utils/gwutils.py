@@ -109,13 +109,15 @@ def hA(f,M,d):
     return 4. * num / den
 
 """Computing SNR"""
-def snr(mass1,mass2,DL,fmin,Tobs,detector,*args):
+def snr_from_psd(mass1,mass2,DL,fmin,Tobs,detectorSn, fmin_detect, fmax_detect,*args):
+    """
+    Computes the SNR of a GW signal given the PSD of the detector.
+    """
     # Mass in Msun at *detector* frame
     #f in *detector* frame
     #Tobs in *detector* frame
     # d=luminosity distance in Mpc
     Mc = mchirp(mass1,mass2)
-    detectorSn, fmin_detect, fmax_detect = detector_psd(detector)
     fmax = vf_fin(fmin,mass1,mass2,Tobs,*args)
     fmin = max(fmin,fmin_detect)
     fmax = min(fmax,fmax_detect)
@@ -144,6 +146,18 @@ def snr(mass1,mass2,DL,fmin,Tobs,detector,*args):
             rang = np.isnan(detectorSn(fs[rangf]))==False 
             snr2 = 4.*np.sum(integrand[rang]*df)#np.sum(4.*integrand[rang]*df)
     return np.sqrt(snr2)
+vsnr_from_psd = np.vectorize(snr_from_psd)
+
+def snr(mass1,mass2,DL,fmin,Tobs,detector,*args):
+    """
+    Computes the SNR of a GW signal for a given detector.
+    """
+    # Mass in Msun at *detector* frame
+    #f in *detector* frame
+    #Tobs in *detector* frame
+    # d=luminosity distance in Mpc
+    detectorSn, fmin_detect, fmax_detect = detector_psd(detector)
+    return snr_from_psd(mass1,mass2,DL,fmin,Tobs,detectorSn, fmin_detect, fmax_detect,*args)
 vsnr = np.vectorize(snr)
 
 def observed_snr(snr):
