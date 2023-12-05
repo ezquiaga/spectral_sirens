@@ -1,7 +1,5 @@
-import numpyro
 import jax
 import jax.numpy as jnp
-from constants import *
 
 """ Mass distribution """
 

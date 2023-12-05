@@ -1,6 +1,6 @@
 #import numpyro
 import jax.numpy as jnp
-from constants import *
+from ..utils.constants import *
 
 def Ez_inv(z,Om0):
     return 1./jnp.sqrt((1.-Om0) + Om0*jnp.power((1.+z),3))
