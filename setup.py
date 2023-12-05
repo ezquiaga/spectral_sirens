@@ -24,9 +24,9 @@ setuptools.setup(
                    },
     include_package_data=True,
 
-    #install_requires=[
-    #    "phazap >= 0.3.0",
-    #],
+    install_requires=[
+        "numpyro",
+    ],
 
     classifiers=[
         "Programming Language :: Python :: 3.7",
