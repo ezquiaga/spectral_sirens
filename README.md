@@ -17,3 +17,9 @@ pip install .
 The base code builds on the IGWN conda environment. To install the IGWN conda environment, see [here](https://computing.docs.ligo.org/conda/environments/igwn/) for instructions and details.
 
 To run the inference on GPUs you need jaxlib and numpyro with GPU support. See [JAX docs](https://github.com/google/jax#pip-installation-gpu-cuda) and [numpyro docs](https://num.pyro.ai/en/latest/getting_started.html) for installation instructions. In particular it requires CUDA to be installed first.
+
+In the folder `envs` you can find the conda environment files used to run the inference on GPUs. To install the conda environment, run
+
+```bash
+conda env create -f envs/inference_gpu.yml
+```
