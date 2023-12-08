@@ -1,5 +1,6 @@
 import jax
 import jax.numpy as jnp
+from jax import jit
 from ..utils.constants import *
 from ..cosmology import jgwcosmo
 from ..gw_population import jgwpop
