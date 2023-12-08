@@ -1,13 +1,10 @@
-import numpy as np
-from scipy.interpolate import interp1d
+import jax
+import jax.numpy as jnp
 
-xp = np
+xp = jnp
 
-""" Inverse Sampling """
-def inverse_transf_sampling(cum_values,variable,n_samples):
-    inv_cdf = interp1d(cum_values, variable)
-    r = xp.random.uniform(min(cum_values),max(cum_values),n_samples)
-    return inv_cdf(r)
+def logdiffexp(x, y): 
+        return x + xp.log1p(xp.exp(y-x))
 
 """ Useful functions  """
 def powerlaw(m,mMin,mMax,alpha):
@@ -25,7 +22,9 @@ def gaussian(x,mu,sig):
 
 """ Filter functions """
 def sigmoid(x,edge,width):
-    return 1./(1.+xp.exp(-(x-edge)/width))
+    #1./(1.+xp.exp(-(x-edge)/width))
+    exponent = (x-edge)/width
+    return jax.nn.sigmoid(exponent)
 
 def lowfilter(m,mMin,dmMin):
     low_filter = xp.exp(-(m-mMin)**2/(2.*dmMin**2))
@@ -50,3 +49,15 @@ def Sfilter(m,mMin,deltaM):
     S_filter = xp.where(m<mMin+deltaM,S_filter,1.)
     S_filter = xp.where(m>mMin,S_filter,0.)
     return S_filter
+
+""" Log filter functions """
+
+def loglowfilter(m,mMin,dmMin):
+    low_filter = -(m-mMin)**2/(2.*dmMin**2)
+    low_filter = xp.where(m<mMin,low_filter,0.)
+    return low_filter
+
+def loghighfilter(m,mMax,dmMax):
+    high_filter = -(m-mMax)**2/(2.*dmMax**2)
+    high_filter = xp.where(m>mMax,high_filter,0.)
+    return high_filter

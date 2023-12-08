@@ -1,6 +1,6 @@
 YEAR   = 3.15581497632e7  # year in seconds
-DAY = 24*60.*60.
-HOUR = 60.*60.
+DAY = 24*60.*60. # day in seconds
+HOUR = 60.*60. # hour in seconds
 AU     = 1.49597870660e11 # Astronomical unit (meters)
 Clight = 299792458.       # speed of light (m/s)
 TSUN    = 4.92549232189886339689643862e-6 # mass of sun in seconds (G=C=1)

@@ -116,10 +116,8 @@ def box_smooth(x,edge,width,filt):
     low_edge = edge
     high_edge = edge + width
 
-    low_filter = xp.exp(-(x-low_edge)**2/(2.*filt**2))
-    low_filter = xp.where(x<low_edge,low_filter,1.)
-    high_filter = xp.exp(-(x-high_edge)**2/(2.*filt**2))
-    high_filter = xp.where(x>high_edge,high_filter,1.)
+    low_filter = utils.lowfilter(x,low_edge,filt)
+    high_filter = utils.highfilter(x,high_edge,filt)
 
     return low_filter*high_filter*1./width
 
@@ -127,17 +125,14 @@ def two_box(x,edge_1,width_1,edge_2,width_2,filt,switch):
     
     return xp.where(x < switch,box_smooth(x,edge_1,width_1,filt),box_smooth(x,edge_2,width_2,filt))
 
-def sigmoid(x,edge,width):
-    return 1./(1.+xp.exp(-(x-edge)/width))
-
 def box_sig(x,edge,width,filt):
     low_edge = edge
     high_edge = edge + width
     mid_point = edge + width/2.
 
-    low_filter = sigmoid(x,low_edge-2*filt,filt)
+    low_filter = utils.sigmoid(x,low_edge-2*filt,filt)
     low_filter = xp.where(x<mid_point,low_filter,1.)
-    high_filter = sigmoid(-x,-high_edge-2*filt,filt)
+    high_filter = utils.sigmoid(-x,-high_edge-2*filt,filt)
     high_filter = xp.where(x>mid_point,high_filter,1.)
 
     return low_filter*high_filter*1./width
