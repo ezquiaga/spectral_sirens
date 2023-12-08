@@ -1,38 +1,97 @@
 import numpy as np
+from ..utils import utils
 
 """ Mass distribution """
-def power_law(m1,alpha,mmin,mmax):
-    if m1 < mmin:
-        pdf = 0.
-    elif m1 > mmax:
-        pdf = 0.
-    else:
-        pdf = (alpha+1.)*(m1**alpha)/((mmax)**(alpha+1.)-mmin**(alpha+1.))
-    return pdf
-power_law = np.vectorize(power_law)
-
-def powerlaw(m,mMin,mMax,alpha):
-    norm = (1. + alpha)/(mMax**(alpha+1.) - mMin**(alpha+1.))
-    return norm * (m**alpha)
-
-tmp_min = 2.
-tmp_max = 150.
-dmMax = 2
-dmMin = 1
-
 def powerlaw_peak(m1,mMin,mMax,alpha,sig_m1,mu_m1,f_peak):
     # Define power-law and peak
-    p_m1_pl = powerlaw(m1,tmp_min,tmp_max,alpha)
-    p_m1_peak = np.exp(-(m1-mu_m1)**2/(2.*sig_m1**2))/np.sqrt(2.*np.pi*sig_m1**2)
+    p_m1_pl = utils.powerlaw(m1,mMin,mMax,alpha)
+    p_m1_peak = utils.gaussian(m1,mu_m1,sig_m1)
+
+    # Combined power-law and peak
+    return (f_peak*p_m1_peak + (1.-f_peak)*p_m1_pl)
+
+def powerlaw_peak_smooth(m1,mMin,mMax,alpha,sig_m1,mu_m1,f_peak,mMin_filter,mMax_filter,dmMin_filter,dmMax_filter):
+    """
+    Smoothed power-law + peak distribution
+
+    Parameters
+    ----------
+    m1 : array_like
+        Component mass
+    mMin : float
+        Minimum component mass for power-law
+    mMax : float
+        Maximum component mass for power-law
+    alpha : float
+        Power-law index
+    sig_m1 : float
+        Width of Gaussian peak
+    mu_m1 : float
+        Mean of Gaussian peak
+    f_peak : float
+        Fraction of events in Gaussian peak
+    mMin_filter : float
+        Minimum component mass for low-mass filter
+    mMax_filter : float
+        Maximum component mass for high-mass filter
+    dmMin_filter : float
+        Width of low-mass filter
+    dmMax_filter : float
+        Width of high-mass filter
+
+    Returns
+    -------
+    array_like
+        Smoothed power-law + peak distribution
+    """
+    # Powerlaw_peak
+    plp = powerlaw_peak(m1,mMin,mMax,alpha,sig_m1,mu_m1,f_peak)
 
     # Compute low- and high-mass filters
-    low_filter = np.exp(-(m1-mMin)**2/(2.*dmMin**2))
-    low_filter = np.where(m1<mMin,low_filter,1.)
-    high_filter = np.exp(-(m1-mMax)**2/(2.*dmMax**2))
-    high_filter = np.where(m1>mMax,high_filter,1.)
+    low_filter = utils.lowfilter(m1,mMin_filter,dmMin_filter)
+    high_filter = utils.highfilter(m1,mMax_filter,dmMax_filter)
 
     # Apply filters to combined power-law and peak
-    return (f_peak*p_m1_peak + (1.-f_peak)*p_m1_pl)*low_filter*high_filter
+    return plp*low_filter*high_filter
+
+def powerlaw_peak_gwtc3(m1,mMin,mMax,alpha,sig_m1,mu_m1,f_peak,deltaM):
+    """
+    Smoothed power-law + peak distribution used in GWTC-3
+
+    See Eq. B4 in https://arxiv.org/pdf/2111.03634.pdf
+
+    Parameters
+    ----------
+    m1 : array_like
+        Component mass
+    mMin : float
+        Minimum component mass
+    mMax : float
+        Maximum component mass
+    alpha : float
+        Power-law index
+    sig_m1 : float
+        Width of Gaussian peak
+    mu_m1 : float
+        Mean of Gaussian peak
+    f_peak : float
+        Fraction of events in Gaussian peak
+    deltaM : float
+        Width of smoothed filter function
+
+    Returns
+    -------
+    array_like
+        Smoothed power-law + peak distribution used in GWTC-3
+    """
+    # Powerlaw_peak
+    plp = powerlaw_peak(m1,mMin,mMax,alpha,sig_m1,mu_m1,f_peak)
+
+    # Compute low- and high-mass filters
+    low_filter = utils.Sfilter(m1,mMin,deltaM)
+
+    # Apply filters to combined power-law and peak
+    return plp*low_filter
 
 
 """ Redshift distribution """
@@ -84,6 +143,3 @@ def box_sig(x,edge,width,filt):
 def two_box_sig(x,edge_1,width_1,edge_2,width_2,filt,switch):
     
     return np.where(x < switch,box_sig(x,edge_1,width_1,filt),box_sig(x,edge_2,width_2,filt))
-
-def gaussian(x,mu,sig):
-    return np.exp(-(x-mu)**2/(2.*sig**2))/np.sqrt(2.*np.pi*sig**2)
