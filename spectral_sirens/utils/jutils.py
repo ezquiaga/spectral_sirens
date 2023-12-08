@@ -8,13 +8,9 @@ def logdiffexp(x, y):
 
 """ Useful functions  """
 def powerlaw(m,mMin,mMax,alpha):
-    if alpha == -1.:
-        norm = 1 / xp.log(mMax/mMin)
-    else:
-        norm = (1. + alpha)/(mMax**(alpha+1.) - mMin**(alpha+1.))
+    norm = (1. + alpha)/(mMax**(alpha+1.) - mMin**(alpha+1.))
     prob = xp.power(m,alpha)
     prob *= norm
-    prob *= (m <= mMax) & (m >= mMin)
     return prob
 
 def gaussian(x,mu,sig):
