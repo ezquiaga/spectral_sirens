@@ -1,6 +1,8 @@
 import numpy as np
 from ..utils import utils
 
+xp = np
+
 """ Mass distribution """
 def powerlaw_peak(m1,mMin,mMax,alpha,sig_m1,mu_m1,f_peak):
     # Define power-law and peak
@@ -114,19 +116,19 @@ def box_smooth(x,edge,width,filt):
     low_edge = edge
     high_edge = edge + width
 
-    low_filter = np.exp(-(x-low_edge)**2/(2.*filt**2))
-    low_filter = np.where(x<low_edge,low_filter,1.)
-    high_filter = np.exp(-(x-high_edge)**2/(2.*filt**2))
-    high_filter = np.where(x>high_edge,high_filter,1.)
+    low_filter = xp.exp(-(x-low_edge)**2/(2.*filt**2))
+    low_filter = xp.where(x<low_edge,low_filter,1.)
+    high_filter = xp.exp(-(x-high_edge)**2/(2.*filt**2))
+    high_filter = xp.where(x>high_edge,high_filter,1.)
 
     return low_filter*high_filter*1./width
 
 def two_box(x,edge_1,width_1,edge_2,width_2,filt,switch):
     
-    return np.where(x < switch,box_smooth(x,edge_1,width_1,filt),box_smooth(x,edge_2,width_2,filt))
+    return xp.where(x < switch,box_smooth(x,edge_1,width_1,filt),box_smooth(x,edge_2,width_2,filt))
 
 def sigmoid(x,edge,width):
-    return 1./(1.+np.exp(-(x-edge)/width))
+    return 1./(1.+xp.exp(-(x-edge)/width))
 
 def box_sig(x,edge,width,filt):
     low_edge = edge
@@ -134,12 +136,12 @@ def box_sig(x,edge,width,filt):
     mid_point = edge + width/2.
 
     low_filter = sigmoid(x,low_edge-2*filt,filt)
-    low_filter = np.where(x<mid_point,low_filter,1.)
+    low_filter = xp.where(x<mid_point,low_filter,1.)
     high_filter = sigmoid(-x,-high_edge-2*filt,filt)
-    high_filter = np.where(x>mid_point,high_filter,1.)
+    high_filter = xp.where(x>mid_point,high_filter,1.)
 
     return low_filter*high_filter*1./width
 
 def two_box_sig(x,edge_1,width_1,edge_2,width_2,filt,switch):
     
-    return np.where(x < switch,box_sig(x,edge_1,width_1,filt),box_sig(x,edge_2,width_2,filt))
+    return xp.where(x < switch,box_sig(x,edge_1,width_1,filt),box_sig(x,edge_2,width_2,filt))
