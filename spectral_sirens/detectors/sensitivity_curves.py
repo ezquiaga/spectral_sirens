@@ -20,7 +20,7 @@ def detector_psd(detector_name):
 Files for sensitivity curves
 """
 
-detectors_list = ['CE-40', 'CE-20', 'ET-10-XYL', 'A#', 'A+', 'V+', 'K+', 'Voyager', 'ET']
+detectors_list = ['CE-40', 'CE-20', 'ET-10-XYL', 'A#', 'A+', 'V+', 'K+', 'Voyager', 'ET', 'O3', 'O4']
 
 def get_filename(tec):
     if   tec == 'CE-40':
@@ -53,6 +53,12 @@ def get_filename(tec):
     elif tec == 'ET':
         filename = 'et_d.txt'
         asd = 1
+    elif tec == 'O3':
+        filename = 'aligo_O3actual_H1.txt'
+        asd = 1
+    elif tec == 'O4':
+        filename = 'aligo_O4high.txt'
+        asd = 1
     else: raise ValueError(f'Specified detector sensitivity "{tec}" not found in {detectors_list}.')
 
     return filename, asd
@@ -77,6 +83,10 @@ def detector_name(detector):
         name = 'Voyager'
     elif detector == 'ET':
         name = 'Einstein Telescope'
+    elif detector == 'O3':
+        name = 'O3'
+    elif detector == 'O4':
+        name = 'O4'
     else: raise ValueError(f'Specified detector sensitivity "{detector}" not found in {detectors_list}.')
     return name
 
