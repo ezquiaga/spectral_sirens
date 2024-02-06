@@ -42,6 +42,7 @@ plots_spectral_sirens/
 data_mock_catalogues/
 data_injections/
 examples/plots/
+examples/scripts/
 __pycache__/
 
 # Output files #
