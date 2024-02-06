@@ -41,6 +41,7 @@ Thumbs.db
 plots_spectral_sirens/
 data_mock_catalogues/
 data_injections/
+examples/plots/
 __pycache__/
 
 # Output files #
@@ -55,3 +56,4 @@ H-of-z-and-residuals/
 # Ignore files #
 ################
 spectral_sirens.egg-info/
+build/
