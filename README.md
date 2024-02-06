@@ -23,3 +23,37 @@ In the folder `envs` you can find the conda environment files used to run the in
 ```bash
 conda env create -f envs/inference_gpu.yml
 ```
+
+## Citing spectral sirens
+
+If you use this code, please consider citing the following papers:
+
+```bibtex
+@article{Chen:2024gdn,
+    author = "Chen, Hsin-Yu and Ezquiaga, Jose Mar\'\i{}a and Gupta, Ish",
+    title = "{Cosmography with next-generation gravitational wave detectors}",
+    eprint = "2402.03120",
+    archivePrefix = "arXiv",
+    primaryClass = "gr-qc",
+    month = "2",
+    year = "2024"
+}
+```
+
+and
+    
+```bibtex
+@article{Ezquiaga:2022zkx,
+    author = "Ezquiaga, Jose Mar\'\i{}a and Holz, Daniel E.",
+    title = "{Spectral Sirens: Cosmology from the Full Mass Distribution of Compact Binaries}",
+    eprint = "2202.08240",
+    archivePrefix = "arXiv",
+    primaryClass = "astro-ph.CO",
+    doi = "10.1103/PhysRevLett.129.061102",
+    journal = "Phys. Rev. Lett.",
+    volume = "129",
+    number = "6",
+    pages = "061102",
+    year = "2022"
+}
+```
