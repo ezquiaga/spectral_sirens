@@ -14,6 +14,7 @@ setuptools.setup(
         "spectral_sirens.cosmology",
         "spectral_sirens.detectors",
         "spectral_sirens.gw_population",
+        "spectral_sirens.gw_rates",
         "spectral_sirens.utils",
         'spectral_sirens.detectors.pw_network',
         'spectral_sirens.detectors.sensitivity_curves',
