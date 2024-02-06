@@ -3,6 +3,7 @@ from scipy.integrate import trapz
 
 from spectral_sirens.cosmology import gwcosmo
 from spectral_sirens.utils import gwutils
+from spectral_sirens.detectors import sensitivity_curves as sc
 
 def dNcbc_dz(z,pz,R0,H0,Om0,Tobs):
     #rate in yr^-1 Gpc^-3
