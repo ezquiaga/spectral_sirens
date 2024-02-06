@@ -17,7 +17,7 @@ beta_fid = 5.6 - alpha_z_fid
 #Mass distribution
 #-----------------
 #Primary mass
-mmin_pl_fid = 5. #Minimum mass for the power-law
+mmin_pl_fid = 0.01 #Minimum mass for the power-law
 mmax_pl_fid = 150. #Maximum mass for the power-law
 mMin_filter_fid = 8.75 #Minimum mass for the low-mass filter
 mMax_filter_fid = 87. #Maximum mass for the high-mass filter
@@ -26,7 +26,7 @@ dmMax_filter_fid = 2.
 alpha_fid = -3.4
 sig_m1_fid = 3.6
 mu_m1_fid = 34.
-f_peak_fid = 0.04
+f_peak_fid = 1.4e-8 #this value depends on mmin_pl_fid and mmax_pl_fid
 
 #Mass ratio
 bq_fid = 1.1
