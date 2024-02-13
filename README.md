@@ -4,6 +4,9 @@ Spectral siren cosmology with the population of compact binary coalescences. Thi
 
 The inference code is written in JAX and numpyro. The mock data generation and sensitivity estimates are written in python.
 
+Notebooks detailing how to run the inference and simulate observations are provided in the `examples` folder. A set of mock gravitational wave events and sensitivity estimates are computed using this code are stored in [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10655745.svg)](https://doi.org/10.5281/zenodo.10655745)
+.
+
 ## Installation
 
 To install the code, clone the repository and install the dependencies with pip:
