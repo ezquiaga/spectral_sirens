@@ -42,6 +42,9 @@ plots_spectral_sirens/
 data_mock_catalogues/
 data_injections/
 examples/plots/
+examples/samples/
+examples/mock_catalogues/
+examples/injections/
 examples/scripts/
 __pycache__/
 
