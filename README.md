@@ -2,7 +2,7 @@
 
 Spectral siren cosmology with the population of compact binary coalescences. This repository contains code to perform hierarchical Bayesian inference, mock data generation and sensitivity estimates.
 
-The inference code is written in JAX and numpyro. The mock data generation and sensitivity estimates are written in python.
+The inference code is written in [JAX](https://github.com/google/jax) and [numpyro](https://num.pyro.ai). The mock data generation and sensitivity estimates are written in python.
 
 Notebooks detailing how to run the inference and simulate observations are provided in the `examples` folder. A set of mock gravitational wave events and sensitivity estimates are computed using this code are stored in [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10655745.svg)](https://doi.org/10.5281/zenodo.10655745)
 .
