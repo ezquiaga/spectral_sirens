@@ -115,7 +115,7 @@ def log_lik(m1z_mock_samples,m2z_mock_samples,dL_mock_samples,pdraw_mock_samples
     p_draw_mock = pdraw_mock_samples
     loglik_E = logNdet_events(m1_mock,m2_mock,z_mock,p_draw_mock,H0,Om0,r0,Tobs,zp,alpha_z,beta,mMin,mMax,alpha,sig_m1,mu_m1,f_peak,mMin_filter,mMax_filter,dmMin_filter,dmMax_filter,bq,Nsamples)
 
-    #Total rate normalization only needed when selection effects are neglected because then N does not cancel out (see notes above)
+    #Total rate normalization only needed when selection effects are neglected because then N does not cancel out (see notes in example notebook)
     #zs_norm = jnp.linspace(0.01,10,1000) 
     #dn_detec = jgwpop.rate_z(zs_norm,zp,alpha_z,beta)*jgwcosmo.diff_comoving_volume_approx(zs_norm,H0,Om0)/(1.+zs_norm)   
     #norm_z = jax.scipy.integrate.trapezoid(dn_detec,zs_norm)
@@ -157,9 +157,7 @@ def logbox_sig(x,edge,width,filt):
     high_edge = edge + width
     mid_point = edge + width/2.
 
-    #loglow_filter = logsigmoid(x,low_edge-2*filt,filt)
     loglow_filter = xp.where(x<mid_point,logsigmoid(x,low_edge-2*filt,filt),0.)
-    #loghigh_filter = logsigmoid(-x,-high_edge-2*filt,filt)
     loghigh_filter = xp.where(x>mid_point,logsigmoid(-x,-high_edge-2*filt,filt),0.)
 
     return loglow_filter + loghigh_filter - xp.log(width)
@@ -175,9 +173,7 @@ def loguniform_sigmoid(x,high_edge,width,filt):
     low_edge = high_edge - width
     mid_point = high_edge - width/2.
 
-    #loglow_filter = logsigmoid(x,low_edge-2*filt,filt)
     loglow_filter = xp.where(x<mid_point,logsigmoid(x,low_edge-2*filt,filt),0.)
-    #loghigh_filter = logsigmoid(-x,-high_edge-2*filt,filt)
     loghigh_filter = xp.where(x>mid_point,logsigmoid(-x,-high_edge-2*filt,filt),0.)
 
     return loglow_filter + loghigh_filter - xp.log(width)
