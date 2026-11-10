@@ -138,12 +138,12 @@ def snr_from_psd(mass1,mass2,DL,fmin,Tobs,detectorSn, fmin_detect, fmax_detect,*
                 else:
                     snr2 = 1.0e-10
         else: 
-            h = aS(mass1,mass2,DL,fmin,Tobs,*args)[0]
-            fs = aS(mass1,mass2,DL,fmin,Tobs,*args)[1]
+            h, fs = aS(mass1,mass2,DL,fmin,Tobs,*args)
             df = fs[1]-fs[0]
             rangf = (fs<fmax)
-            integrand = (h[rangf]**2.)/detectorSn(fs[rangf])
-            rang = np.isnan(detectorSn(fs[rangf]))==False 
+            Sn = detectorSn(fs[rangf])
+            integrand = (h[rangf]**2.)/Sn
+            rang = np.isnan(Sn)==False
             snr2 = 4.*np.sum(integrand[rang]*df)#np.sum(4.*integrand[rang]*df)
     return np.sqrt(snr2)
 vsnr_from_psd = np.vectorize(snr_from_psd)
